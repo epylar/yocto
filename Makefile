@@ -1,4 +1,5 @@
 SSTATESETUP ?= echo using default sstate
+SSTATE-BACKUP = /usr/storage
 
 all: openjdk-7-jre
 
@@ -29,6 +30,14 @@ cache:
 # Build core-image-sato
 openjdk-7-jre: poky dependencies
 	cd poky && . ./oe-init-build-env && ${SSTATESETUP} &&  bitbake openjdk-7-jre
+
+save-top-sstate:
+	rsync -av sstate-cache/ ${SSTATE-BACKUP}/sstate-cache/ 
+
+save-build-sstate:
+	rsync -av sstate-cache/ ${SSTATE-BACKUP}/sstate-cache/
+
+save-all-sstate: save-top-sstate save-build-sstate
 
 # Delete poky
 clean:
