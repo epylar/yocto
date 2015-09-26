@@ -1,6 +1,6 @@
 SSTATESETUP ?= echo using default sstate
 
-all: core-image-sato
+all: openjdk-7-jre
 
 # Set up Ubuntu 14.04 or later for building.
 dependencies:
@@ -13,26 +13,23 @@ dependencies:
 	sudo apt-get build-dep qemu
 	touch dependencies
 
-# Init poky from cache
+# Init poky from git cache
 poky: cache
 	rsync -a --delete cache/ poky/
 	cd poky && git checkout -b fido origin/fido
 
-# Clone remote poky into cache
-cache: 
-	git clone http://git.yoctoproject.org/git/poky cache && cd cache && git clone https://git.yoctoproject.org/cgit/cgit.cgi/meta-java meta-java
+# Clone remote poky/layers into git cache
+cache:  
+	rm -rf cache
+	git clone http://git.yoctoproject.org/git/poky cache && \
+		cd cache && \
+		git clone https://git.yoctoproject.org/cgit/cgit.cgi/meta-java meta-java && \
+		git clone http://git.openembedded.org/meta-openembedded meta-openembedded
 
 # Build core-image-sato
-core-image-sato: poky dependencies
-	cd poky && . ./oe-init-build-env && ${SSTATESETUP} &&  bitbake core-image-sato
-
-# Delete cache
-wipe-cache:
-	rm -rf cache	
+openjdk-7-jre: poky dependencies
+	cd poky && . ./oe-init-build-env && ${SSTATESETUP} &&  bitbake openjdk-7-jre
 
 # Delete poky
-wipe-poky:
+clean:
 	rm -rf poky
-
-# Delete cache and poky
-wipe: wipe-cache wipe-poky

@@ -3,3 +3,4 @@ poky
 dependencies
 sstate-cache
 build
+VM
