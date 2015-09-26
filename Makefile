@@ -20,7 +20,7 @@ poky: cache
 
 # Clone remote poky into cache
 cache: 
-	git clone http://git.yoctoproject.org/git/poky cache
+	git clone http://git.yoctoproject.org/git/poky cache && cd cache && git clone https://git.yoctoproject.org/cgit/cgit.cgi/meta-java meta-java
 
 # Build core-image-sato
 core-image-sato: poky dependencies
